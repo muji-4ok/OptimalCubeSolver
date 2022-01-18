@@ -32,12 +32,12 @@
 */
 
 //+++++++Mapping corners {URF,UFL,ULB,UBR,DFR,DLF,DBL,DRB} to facelets+++++++++
-const Facelet cornerFacelet[8][3] =
+const Facelet optimal_cornerFacelet[8][3] =
  {	{U9,R1,F3},{U7,F1,L3},{U1,L1,B3},{U3,B1,R3},
 	{D3,F9,R7},{D1,L9,F7},{D7,B9,L7},{D9,R9,B7}};
 	
 //+++++++Mapping edges {UR,UF,UL,UB,DR,DF,DL,DB,FR,FL,BL,BR} to facelets+++++++
-const Facelet edgeFacelet[12][2] =
+const Facelet optimal_edgeFacelet[12][2] =
 {	{U6,R2},{U8,F2},{U4,L2},{U2,B2},{D6,R8},{D2,F8},{D4,L8},
 	{D8,B8},{F6,R4},{F4,L6},{B6,L4},{B4,R6}};
 
@@ -94,8 +94,8 @@ CubieCube cubeAxMove(CubieCube cc, Axis ax)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 CubieCube ccRet;
-cornerMultiply(&cc,&basicCubeMove[ax],&ccRet);
-edgeMultiply(&cc,&basicCubeMove[ax],&ccRet);
+optimal_cornerMultiply(&cc,&basicCubeMove[ax],&ccRet);
+optimal_edgeMultiply(&cc,&basicCubeMove[ax],&ccRet);
 return ccRet;
 };
 
@@ -125,14 +125,14 @@ for (i=URF;i<=DRB;i++)
 	j = cc.co[i].c;//cornercubie j is in position i
 	ori = cc.co[i].o;//Orientation of this cubie
 	for (n=0;n<3;n++)
-	fcRet.f[cornerFacelet[i][(n+ori)%3 ]] = faceletToColor[cornerFacelet[j][n]];
+	fcRet.f[optimal_cornerFacelet[i][(n+ori)%3 ]] = faceletToColor[optimal_cornerFacelet[j][n]];
 }
 for (k=UR;k<=BR;k++)
 {
 	m = cc.eo[k].e;//edgecubie m is in position k
 	ori = cc.eo[k].o;//Orientation of this cubie
 	for (n=0;n<2;n++)
-	fcRet.f[edgeFacelet[k][(n+ori)%2 ]] = faceletToColor[edgeFacelet[m][n]];
+	fcRet.f[optimal_edgeFacelet[k][(n+ori)%2 ]] = faceletToColor[optimal_edgeFacelet[m][n]];
 }
 //set center colors
 fcRet.f[U5]=U;fcRet.f[R5]=R;fcRet.f[F5]=F;
@@ -150,15 +150,15 @@ for (i=URF;i<=DRB;i++)
 {
 	//get the colors of the cubie at corner i, starting with the U/D color
 	for (ori=0;ori<3;ori++)
-	if (fc.f[cornerFacelet[i][ori]]==U || fc.f[cornerFacelet[i][ori]]==D)
+	if (fc.f[optimal_cornerFacelet[i][ori]]==U || fc.f[optimal_cornerFacelet[i][ori]]==D)
 	break;
-	col1 = fc.f[cornerFacelet[i][(ori+1)%3]];
-	col2 = fc.f[cornerFacelet[i][(ori+2)%3]];
+	col1 = fc.f[optimal_cornerFacelet[i][(ori+1)%3]];
+	col2 = fc.f[optimal_cornerFacelet[i][(ori+2)%3]];
 	
 	for (j=URF;j<=DRB;j++)
 	{
-		if (col1==faceletToColor[cornerFacelet[j][1]]
-		&& col2==faceletToColor[cornerFacelet[j][2]])
+		if (col1==faceletToColor[optimal_cornerFacelet[j][1]]
+		&& col2==faceletToColor[optimal_cornerFacelet[j][2]])
 		{
 			// in cornerposition i we have cornercubie j
 			ccRet.co[i].c = j;
@@ -170,15 +170,15 @@ for (i=URF;i<=DRB;i++)
 for (k=UR;k<=BR;k++)
 for (m=UR;m<=BR;m++)
 {
-	if (fc.f[edgeFacelet[k][0]]==faceletToColor[edgeFacelet[m][0]] &&
-		fc.f[edgeFacelet[k][1]]==faceletToColor[edgeFacelet[m][1]])
+	if (fc.f[optimal_edgeFacelet[k][0]]==faceletToColor[optimal_edgeFacelet[m][0]] &&
+		fc.f[optimal_edgeFacelet[k][1]]==faceletToColor[optimal_edgeFacelet[m][1]])
 	{
 		ccRet.eo[k].e = m;
 		ccRet.eo[k].o = 0;
 		break;	
 	}
-	if (fc.f[edgeFacelet[k][0]]==faceletToColor[edgeFacelet[m][1]] &&
-		fc.f[edgeFacelet[k][1]]==faceletToColor[edgeFacelet[m][0]])
+	if (fc.f[optimal_edgeFacelet[k][0]]==faceletToColor[optimal_edgeFacelet[m][1]] &&
+		fc.f[optimal_edgeFacelet[k][1]]==faceletToColor[optimal_edgeFacelet[m][0]])
 	{
 		ccRet.eo[k].e = m;
 		ccRet.eo[k].o = 1;
@@ -277,7 +277,7 @@ CubieCube stringToCubieCube(char* defString)
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void cornerMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
+void optimal_cornerMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //The result of the multiplication is the composition of the the permutations
 //a and b. Because we also describe reflections of the whole cube by
@@ -320,7 +320,7 @@ for (crn=URF;crn<=DRB;crn++)
 }	
  
  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void edgeMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
+void optimal_edgeMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //With edges we have no complications with mirror images, because the mirror
 //image of an edgecubie looks the same as the edgecubie itself. So we only have
@@ -335,15 +335,15 @@ for (edg=UR;edg<=BR;edg++)
 }
 
  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void multiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
+void optimal_multiply(const CubieCube *a,const CubieCube *b, CubieCube *ab)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-cornerMultiply(a,b,ab);
-edgeMultiply(a,b,ab);	
+optimal_cornerMultiply(a,b,ab);
+optimal_edgeMultiply(a,b,ab);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-CubieCube invCubieCube(CubieCube cc)
+CubieCube optimal_invCubieCube(CubieCube cc)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 CubieCube ccInv;

@@ -11,7 +11,7 @@ extern CubieCube idCube;
 //***************************************************************************
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int Cnk(unsigned char n, unsigned char k)
+int optimal_Cnk(unsigned char n, unsigned char k)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 int s;
@@ -99,7 +99,7 @@ unsigned short int slice(CubieCube cc)
 {
 int a=0,x=0,j;
 //compute the index a for combination (< 12 choose 4).
-for (j=BR;j>=UR;j--) if (FR<=cc.eo[j].e && cc.eo[j].e<=BR ) a += Cnk(11-j,x++ +1);
+for (j=BR;j>=UR;j--) if (FR<=cc.eo[j].e && cc.eo[j].e<=BR ) a += optimal_Cnk(11-j,x++ +1);
 return a;
 }
 
@@ -113,7 +113,7 @@ for (j=UR;j<=BR;j++) ccRet.eo[j].e =255;//Invalidate all edges
 
 x = 3;//generate combination and set edges
 for (j=UR;j<=BR;j++)
-if (a - Cnk(11-j,x+1)>=0) {ccRet.eo[j].e = perm[x]; a -=Cnk(11-j,x-- +1);}
+if (a - optimal_Cnk(11-j,x+1)>=0) {ccRet.eo[j].e = perm[x]; a -=optimal_Cnk(11-j,x-- +1);}
 for (j=UR,x=0;j<=BR;j++)//set the remaining edges 0..7
 if (ccRet.eo[j].e == 255) ccRet.eo[j].e = x++;
 return ccRet;
@@ -127,7 +127,7 @@ unsigned short int corn6Pos(CubieCube cc)
 int a=0,b,x=0,j,k,perm[6];
 //compute the index a < (8 choose 6) and the permutation array perm.
 for (j=URF;j<=DRB;j++)
-if (cc.co[j].c<=DLF) {a += Cnk(j,x+1);perm[x++] = cc.co[j].c;}
+if (cc.co[j].c<=DLF) {a += optimal_Cnk(j,x+1);perm[x++] = cc.co[j].c;}
 
 for (j=5,b=0;j>0;j--)//compute the index b < 6! for the permutation in perm
 {
@@ -155,7 +155,7 @@ for (j=1;j<6;j++)//generate permutation from index b
 }
 x = 5;//generate combination and set corners
 for (j=DRB;j>=0;j--)
-if (a-Cnk(j,x+1)>=0) {ccRet.co[j].c = perm[x]; a -=Cnk(j,x-- +1);}
+if (a-optimal_Cnk(j,x+1)>=0) {ccRet.co[j].c = perm[x]; a -=optimal_Cnk(j,x-- +1);}
 return ccRet;
 }
 
@@ -167,7 +167,7 @@ int edge6Pos(CubieCube cc)
 int a=0,b,x=0,j,k,perm[6];
 //compute the index a < (12 choose 6) and the permutation array perm.
 for (j=UR;j<=BR;j++)
-if (cc.eo[j].e<=DF) {a += Cnk(j,x+1);perm[x++] = cc.eo[j].e;}
+if (cc.eo[j].e<=DF) {a += optimal_Cnk(j,x+1);perm[x++] = cc.eo[j].e;}
 
 for (j=5,b=0;j>0;j--)//compute the index b < 6! for the permutation in perm
 {
@@ -194,7 +194,7 @@ for (j=1;j<6;j++)//generate permutation from index b
 }
 x = 5;//generate combination and set edges
 for (j=BR;j>=0;j--)
-if (a-Cnk(j,x+1)>=0) {ccRet.eo[j].e = perm[x]; a -=Cnk(j,x-- +1);}
+if (a-optimal_Cnk(j,x+1)>=0) {ccRet.eo[j].e = perm[x]; a -=optimal_Cnk(j,x-- +1);}
 return ccRet;
 }
 
@@ -206,10 +206,10 @@ int edge4Pos(CubieCube cc)
 int a=0,b,x=0,j,k,perm[4];
 //compute the index a < (12 choose 4) and the permutation array perm.
 //for (j=UR;j<=BR;j++)
-//if (cc.eo[j].e<=DF) {a += Cnk(j,x+1);perm[x++] = cc.eo[j].e;}
+//if (cc.eo[j].e<=DF) {a += optimal_Cnk(j,x+1);perm[x++] = cc.eo[j].e;}
 for (j=BR;j>=UR;j--)
   if (FR<=cc.eo[j].e && cc.eo[j].e<=BR )
-  {a += Cnk(11-j,x+1); perm[3-  x++] = cc.eo[j].e;}
+  {a += optimal_Cnk(11-j,x+1); perm[3-  x++] = cc.eo[j].e;}
 
 for (j=  3,b=0;j>0;j--)//compute the index b < 4! for the permutation in perm
 {
@@ -238,7 +238,7 @@ for (j=1;j<4;j++)//generate permutation from index b
 
 x = 3;//generate combination and set edges
 for (j=UR;j<=BR;j++)
-if (a - Cnk(11-j,x+1)>=0) {ccRet.eo[j].e = perm[3 -x]; a -=Cnk(11-j,x-- +1);}
+if (a - optimal_Cnk(11-j,x+1)>=0) {ccRet.eo[j].e = perm[3 -x]; a -=optimal_Cnk(11-j,x-- +1);}
 
 for (j=UR,x=0;j<=BR;j++)//set the remaining edges 0..7
 if (ccRet.eo[j].e == 255) ccRet.eo[j].e = x++;
@@ -246,7 +246,7 @@ return ccRet;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int cornerParity(CubieCube cc)
+int optimal_cornerParity(CubieCube cc)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 int i,j,s=0;	
@@ -258,7 +258,7 @@ return s%2;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int edgeParity(CubieCube cc)
+int optimal_edgeParity(CubieCube cc)
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 int i,j,s=0;	
@@ -281,12 +281,12 @@ for (i=0;i<NTWIST;i++)
 	for (j=mU1;j<=mB3;j+=2)
 	{
 		m = j>>1;//extract the move axis
-		cornerMultiply(&a,&basicCubeMove[m],&b);
-		twistMove[i][j] = twist(b);
-		cornerMultiply(&b,&basicCubeMove[m],&c);
-		cornerMultiply(&c,&basicCubeMove[m],&d);
-		twistMove[i][j+1] = twist(d);
-		cornerMultiply(&d,&basicCubeMove[m],&a);
+		optimal_cornerMultiply(&a,&basicCubeMove[m],&b);
+		optimal_twistMove[i][j] = twist(b);
+		optimal_cornerMultiply(&b,&basicCubeMove[m],&c);
+		optimal_cornerMultiply(&c,&basicCubeMove[m],&d);
+		optimal_twistMove[i][j+1] = twist(d);
+		optimal_cornerMultiply(&d,&basicCubeMove[m],&a);
 	}
 }
 }
@@ -303,12 +303,12 @@ for (i=0;i<NCORN6POS;i++)
 	for (j=mU1;j<=mB3;j+=2)
 	{
 		m = j>>1;//extract the move axis
-		cornerMultiply(&a,&basicCubeMove[m],&b);
+		optimal_cornerMultiply(&a,&basicCubeMove[m],&b);
 		corn6PosMove[i][j] = corn6Pos(b);
-		cornerMultiply(&b,&basicCubeMove[m],&c);
-		cornerMultiply(&c,&basicCubeMove[m],&d);
+		optimal_cornerMultiply(&b,&basicCubeMove[m],&c);
+		optimal_cornerMultiply(&c,&basicCubeMove[m],&d);
 		corn6PosMove[i][j+1] = corn6Pos(d);
-		cornerMultiply(&d,&basicCubeMove[m],&a);
+		optimal_cornerMultiply(&d,&basicCubeMove[m],&a);
 	}
 }
 }
@@ -326,12 +326,12 @@ for (i=0;i<NEDGE6POS;i++)
 	for (j=mU1;j<=mB3;j+=2)
 	{
 		m = j>>1;//extract the move axis
-		edgeMultiply(&a,&basicCubeMove[m],&b);
+		optimal_edgeMultiply(&a,&basicCubeMove[m],&b);
 		edge6PosMove[i][j] = edge6Pos(b);
-		edgeMultiply(&b,&basicCubeMove[m],&c);
-		edgeMultiply(&c,&basicCubeMove[m],&d);
+		optimal_edgeMultiply(&b,&basicCubeMove[m],&c);
+		optimal_edgeMultiply(&c,&basicCubeMove[m],&d);
 		edge6PosMove[i][j+1] = edge6Pos(d);
-		edgeMultiply(&d,&basicCubeMove[m],&a);
+		optimal_edgeMultiply(&d,&basicCubeMove[m],&a);
 	}
 }
 }
@@ -348,12 +348,12 @@ for (i=0;i<NEDGE4POS;i++)
 	for (j=mU1;j<=mB3;j+=2)
 	{
 		m = j>>1;//extract the move axis
-		edgeMultiply(&a,&basicCubeMove[m],&b);
+		optimal_edgeMultiply(&a,&basicCubeMove[m],&b);
 		edge4PosMove[i][j] = edge4Pos(b);
-		edgeMultiply(&b,&basicCubeMove[m],&c);
-		edgeMultiply(&c,&basicCubeMove[m],&d);
+		optimal_edgeMultiply(&b,&basicCubeMove[m],&c);
+		optimal_edgeMultiply(&c,&basicCubeMove[m],&d);
 		edge4PosMove[i][j+1] = edge4Pos(d);
-		edgeMultiply(&d,&basicCubeMove[m],&a);
+		optimal_edgeMultiply(&d,&basicCubeMove[m],&a);
 	}
 }
 }
@@ -412,12 +412,12 @@ for(i=0;i<NFLIPSLICE;i++)
 	for (j=mU1;j<=mB3;j+=2)
 	{
 		m = j>>1;//extract move axis
-		edgeMultiply(&ccFlip,&basicCubeMove[m],&b);
+		optimal_edgeMultiply(&ccFlip,&basicCubeMove[m],&b);
 		symFlipSliceClassMove[i][j] = symFlipSlice(b);
-		edgeMultiply(&b,&basicCubeMove[m],&c);
-		edgeMultiply(&c,&basicCubeMove[m],&d);
+		optimal_edgeMultiply(&b,&basicCubeMove[m],&c);
+		optimal_edgeMultiply(&c,&basicCubeMove[m],&d);
 		symFlipSliceClassMove[i][j+1] = symFlipSlice(d);
-		edgeMultiply(&d,&basicCubeMove[m],&ccFlip);
+		optimal_edgeMultiply(&d,&basicCubeMove[m],&ccFlip);
 	}
 }	
 }
@@ -453,7 +453,7 @@ CoordCube co;
 co.corn6Pos = corn6Pos(cc);
 co.edge6Pos = edge6Pos(cc);
 co.edge4Pos = edge4Pos(cc);
-co.parity = cornerParity(cc);
+co.parity = optimal_cornerParity(cc);
 co.symFlipSlice = symFlipSlice(cc);
 co.twist = twist(cc);
 return co;

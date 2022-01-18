@@ -8,7 +8,7 @@ int moveConjugate[NMOVE][NSYM_Oh];
 int twistConjugate[NTWIST][NSYM_D4h];
 int rawFlipSliceRep[NFLIPSLICE];
 char nextMove[NMBITS][NMOVE+1];
-unsigned short int twistMove[NTWIST][NMOVE];
+unsigned short int optimal_twistMove[NTWIST][NMOVE];
 unsigned short int corn6PosMove[NCORN6POS][NMOVE];
 unsigned short int edge4PosMove[NEDGE4POS][NMOVE];
 int edge6PosMove[NEDGE6POS][NMOVE];

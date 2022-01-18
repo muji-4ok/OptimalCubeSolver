@@ -133,7 +133,7 @@ extern int moveConjugate[NMOVE][NSYM_Oh];
 extern int twistConjugate[NTWIST][NSYM_D4h];
 extern int rawFlipSliceRep[NFLIPSLICE];
 extern char nextMove[NMBITS][NMOVE+1];
-extern unsigned short int twistMove[NTWIST][NMOVE];
+extern unsigned short int optimal_twistMove[NTWIST][NMOVE];
 extern unsigned short int corn6PosMove[NCORN6POS][NMOVE];
 extern unsigned short int edge4PosMove[NEDGE4POS][NMOVE];
 extern int edge6PosMove[NEDGE6POS][NMOVE];
@@ -171,19 +171,19 @@ CubieCube stringToCubieCube(char* defString);
 void cubieCubeToString(CubieCube cc, char* defString);
 //Creates a description string in Singmaster notation from a cubieCube.
 
-void cornerMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
-void edgeMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
-void multiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
+void optimal_cornerMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
+void optimal_edgeMultiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
+void optimal_multiply(const CubieCube *a,const CubieCube *b, CubieCube *ab);
 //Computes the composition  of the permutations a and b including orientations.
 
-CubieCube invCubieCube(CubieCube cc);
+CubieCube optimal_invCubieCube(CubieCube cc);
 //Computes the inverse cc^-1 of cc, so we have cc^-1*cc = idCube.
 
 //*****************************************************************************
 //*                           coordcube.c functions                           *
 //*****************************************************************************
 
-int Cnk(unsigned char n, unsigned char k);
+int optimal_Cnk(unsigned char n, unsigned char k);
 //Binomial coefficient n choose k.
 
 unsigned short int twist(CubieCube cc);
@@ -237,16 +237,16 @@ int symFlipSlice(CubieCube cc);
 //because there are equivalence classes where the cubes have some symmetry
 //itself.
 
-int cornerParity(CubieCube cc);
+int optimal_cornerParity(CubieCube cc);
 //Returns 0 if cube has even corner parity, 1 if it has odd parity. 
 
-int edgeParity(CubieCube cc);
+int optimal_edgeParity(CubieCube cc);
 //Returns 0 if cube has even edge parity, 1 if it has odd parity. 
 
 void initTwistMove();
-//Initializes the twistMove table which gives the new twist of a cube A
+//Initializes the optimal_twistMove table which gives the new twist of a cube A
 //with twist a after applying move m.
-//twist(A*moveCube[m]) = twistMove[a][m]
+//twist(A*moveCube[m]) = optimal_twistMove[a][m]
 
 void initCorn6PosMove();
 //similar to initTwistMove().
@@ -295,7 +295,7 @@ void initSymFlipSliceClassMove();
 int symFlipSliceMove(int symFlipSlice, int m);
 //computes the new symFlipSlice coordinate after applying move m.
 //Because there are 64430*16 different symFlipSlice coordinates, the value is
-//computed by a function and not realized as a table like twistMove.
+//computed by a function and not realized as a table like optimal_twistMove.
 
 void initMoveConjugate();
 //Initializes the moveConjugate table. If m is a move and x the index of a

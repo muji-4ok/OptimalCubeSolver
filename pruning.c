@@ -30,7 +30,7 @@ void initMovesCloserToTarget()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 FILE *tableSave;
-char fileName[] = {"pruntable"};
+char fileName[] = {"cache/pruntable"};
 int flipSlice,twist,parity,symFlipSlice1,sym1,flipSlice1,twist1,parity1,i;
 unsigned long idx,idx1,count=1;
 Move m;
@@ -51,7 +51,7 @@ free(visitedA); free(visitedB);
 return;
 
 MAKETABLE:
-printf("\ngenerating pruning table (538 MB), this may take half an hour.\n");
+printf("\ngenerating pruning table (538 MB), this will take no more than 5 minutes.\n");
 fflush(stdout);
 visitedA[0] = 1;visitedB[0] = 1;
 while (count != NGOAL)
@@ -70,7 +70,7 @@ while (count != NGOAL)
 				symFlipSlice1 = symFlipSliceClassMove[flipSlice][m];
 				sym1 = symFlipSlice1 & 15;
 				flipSlice1 = symFlipSlice1>>4;
-				twist1 = twistMove[twist][m];
+				twist1 = optimal_twistMove[twist][m];
 				twist1 = twistConjugate[twist1][sym1];
 				idx1 = ((NTWIST*flipSlice1 + twist1)<<1) + parity1;
 				if (visitedA[idx1>>3] & 1<<(idx1&7))//occupied, so closer to goal
@@ -141,7 +141,7 @@ while (1)
 			symFlipSlice = symFlipSliceMove(symFlipSlice,move);
 			sym = symFlipSlice&15;
 			flipSlice = symFlipSlice>>4;
-			twist = twistMove[twist][move];
+			twist = optimal_twistMove[twist][move];
 			twistConj = twistConjugate[twist][sym];
 			parity ^= 1;
 			break;
@@ -344,21 +344,21 @@ const char* solveOptimal(CubieCube cu)
     b = symFlipSliceClassMove[snP->flipSliceU][mConjU];
     snPNew->flipSliceU = b>>4;
     snPNew->symU = symIdxMultiply[b&15][snP->symU];
-    snPNew->twistU = twistMove[snP->twistU][m];
+    snPNew->twistU = optimal_twistMove[snP->twistU][m];
 
     m=moveConjugate[m][16];
     mConjR = moveConjugate[m][snP->symR];
     b = symFlipSliceClassMove[snP->flipSliceR][mConjR];
     snPNew->flipSliceR = b>>4;
     snPNew->symR = symIdxMultiply[b&15][snP->symR];
-    snPNew->twistR = twistMove[snP->twistR][m];
+    snPNew->twistR = optimal_twistMove[snP->twistR][m];
 
     m=moveConjugate[m][16];
     mConjF = moveConjugate[m][snP->symF];
     b = symFlipSliceClassMove[snP->flipSliceF][mConjF];
     snPNew->flipSliceF = b>>4;
     snPNew->symF = symIdxMultiply[b&15][snP->symF];
-    snPNew->twistF = twistMove[snP->twistF][m];
+    snPNew->twistF = optimal_twistMove[snP->twistF][m];
 
     twistConjU=twistConjugate[snPNew->twistU][snPNew->symU];
     twistConjR=twistConjugate[snPNew->twistR][snPNew->symR];

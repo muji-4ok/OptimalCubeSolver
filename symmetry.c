@@ -40,16 +40,16 @@ for (a=0;a<3;a++)					//S_URF3
 			for (d=0;d<2;d++)		//S_LR2
 			{
 				symCube[idx++] = ci;
-				multiply(&ci,&basicSymCube[S_LR2],&cb);
+				optimal_multiply(&ci,&basicSymCube[S_LR2],&cb);
 				ci = cb;
 			}
-			multiply(&ci,&basicSymCube[S_U4],&cb);
+			optimal_multiply(&ci,&basicSymCube[S_U4],&cb);
 			ci = cb;
 		}
-		multiply(&ci,&basicSymCube[S_F2],&cb);
+		optimal_multiply(&ci,&basicSymCube[S_F2],&cb);
 		ci = cb;
 	}	
-	multiply(&ci,&basicSymCube[S_URF3],&cb);
+	optimal_multiply(&ci,&basicSymCube[S_URF3],&cb);
 	ci = cb;
 }
 }
@@ -63,7 +63,7 @@ int j,k;
 for (j=0;j<NSYM_Oh;j++)
 for (k=0;k<NSYM_Oh;k++)
 {	
-	cornerMultiply(&symCube[j],&symCube[k],&cc);
+	optimal_cornerMultiply(&symCube[j],&symCube[k],&cc);
 	if (cc.co[URF].c == URF && cc.co[UFL].c == UFL && cc.co[ULB].c == ULB)
 	{
 		invSymIdx[j] = k; break;
@@ -81,7 +81,7 @@ CubieCube cc;
 for (i=0;i<NSYM_Oh;i++)
 for (j=0;j<NSYM_Oh;j++)
 {
-	edgeMultiply(&symCube[i],&symCube[j],&cc);
+	optimal_edgeMultiply(&symCube[i],&symCube[j],&cc);
 	for (k=0;k<NSYM_Oh;k++)//find the product cube
 	{
 		if (symCube[k].eo[UR].e==cc.eo[UR].e && 
@@ -136,8 +136,8 @@ CubieCube edgeConjugate(CubieCube cc, int symIdx)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 CubieCube ccTmp;
-edgeMultiply(&symCube[symIdx],&cc,&ccTmp);
-edgeMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);	
+optimal_edgeMultiply(&symCube[symIdx],&cc,&ccTmp);
+optimal_edgeMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);
 return cc;
 }
 
@@ -146,8 +146,8 @@ CubieCube cornerConjugate(CubieCube cc, int symIdx)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
 CubieCube ccTmp;
-cornerMultiply(&symCube[symIdx],&cc,&ccTmp);
-cornerMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);	
+optimal_cornerMultiply(&symCube[symIdx],&cc,&ccTmp);
+optimal_cornerMultiply(&ccTmp,&symCube[invSymIdx[symIdx]],&cc);
 return cc;
 }
 
@@ -190,10 +190,10 @@ Corner i; Edge j;
 for (symIdx=0;symIdx<48;symIdx++)
 {
 	hasThisSym=1;
-	cornerMultiply(&symCube[symIdx],&cc,&ccTmp1);
-	cornerMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);	
-	edgeMultiply(&symCube[symIdx],&cc,&ccTmp1);
-	edgeMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);
+	optimal_cornerMultiply(&symCube[symIdx],&cc,&ccTmp1);
+	optimal_cornerMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);
+	optimal_edgeMultiply(&symCube[symIdx],&cc,&ccTmp1);
+	optimal_edgeMultiply(&ccTmp1,&symCube[invSymIdx[symIdx]],&ccTmp);
 	for (i=URF;i<=DRB;i++)
 	{
 		if (ccTmp.co[i].c!=cc.co[i].c || ccTmp.co[i].o!=cc.co[i].o)
